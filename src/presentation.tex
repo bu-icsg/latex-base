@@ -1,0 +1,48 @@
+\documentclass{beamer}
+
+\input{header-presentation}
+\title[Example Presentation]{Example Beamer Presentation}
+\author[schuyler.eldridge@gmail.com]{Schuyler Eldridge}
+\date[\today]{\today}
+
+\begin{document}
+\maketitle
+
+\section*{Example Slides}
+
+\begin{frame}{Blocks Everywhere}
+  \begin{block}{Blocks are better?}
+    \begin{itemize}
+    \item Everything in beamer seems to look better in blocks
+    \item So, the default slide has a block and an itemized list
+      \begin{itemize}
+      \item You can also nest itemized lists
+      \end{itemize}
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Column Slide}
+  \begin{columns}[b]
+    \column{0.60\textwidth}
+    \begin{block}{First \textbf{BIG} Column}
+      \begin{itemize}
+      \item You can split content into columns
+      \item Column size is governed manually
+      \item Column alignment (here \texttt{b}, bottom) can also be specified
+      \end{itemize}
+    \end{block}
+
+    \column{0.35\textwidth}
+    \begin{block}{Second {\tiny little} Column}
+      \begin{itemize}
+      \item ALPHA
+      \item BRAVO
+      \item CHARLIE
+      \item DELTA
+      \item ECHO
+      \end{itemize}
+    \end{block}
+  \end{columns}
+\end{frame}
+\end{document}
