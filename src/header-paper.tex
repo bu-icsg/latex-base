@@ -1,0 +1,123 @@
+%% -*- mode: latex; -*-
+\documentclass[conference]{IEEEtran}
+
+%% \include{pgfplots}
+
+\usepackage[normalem]{ulem}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{listings}
+\lstset{basicstyle=\footnotesize}
+\usepackage[outdir=build/]{epstopdf}
+\usepackage{xfrac}
+\usepackage{xspace}
+\usepackage{amsmath}
+\usepackage{hyperref}
+
+%% Tikz related
+\usepackage{pgfplots}
+\usepgfplotslibrary{external}
+\usetikzlibrary{external,pgfplots.groupplots}
+\tikzexternalize[prefix=./build]
+\ifpdf
+\else
+\tikzset{external/system call={latex \tikzexternalcheckshellescape -halt-on-error -interaction=batchmode -jobname "\image" "\texsource" && dvips -o "\image".ps "\image".dvi}}
+\fi
+
+\input{colorbrewer}
+
+% I'm not terrifically happy with the available TODO packages...
+% Alternatives are `todonotes` and `todo`
+%% \usepackage{todonotes}
+%% \presetkeys{todonotes}{inline}{}
+%% \usepackage{siunitx}
+%% \usepackage{todo}
+
+\newcommand{\todobase}[3]{
+  {\color{#1}{\textbf{#2[}}{#3}{\textbf{]}}}\xspace
+}
+\newcommand{\todo}[1]{
+  \todobase{Blues9p5}{TODO}{#1}
+}
+\newcommand{\schuyler}[1]{
+  \todobase{Greens9p5}{SCHUYLER}{#1}
+}
+\newcommand{\fixme}[1]{
+  \todo{#1}
+}
+\newcommand{\missingcitation}{
+  [{\color{cyan}\textbf{??}}]\xspace
+}
+\newcommand{\missingdata}{
+  {\color{Reds9p5}\textbf{XX}}\xspace
+}
+% Creates a dummy figure. Modified from:
+%   https://gist.github.com/dpgettings/9635856
+\newcommand{\missingfigure}[1]{
+  \centering
+  \fbox{
+    \begin{minipage}[c][0.8\columnwidth][c]{0.8\columnwidth}
+      \centering{\todo{#1}}
+    \end{minipage}
+  }
+}
+
+\newcommand{\missingwidefigure}[1]{
+  \centering
+  \fbox{
+    \begin{minipage}[c][0.8\columnwidth][c]{0.8\textwidth}
+      \centering{\todo{#1}}
+    \end{minipage}
+  }
+}
+
+\lstdefinestyle{customc}{
+  belowcaptionskip=1\baselineskip,
+  breaklines=true,
+  %% frame=L,
+  xleftmargin=\parindent,
+  language=C,
+  showstringspaces=false,
+  basicstyle=\footnotesize\ttfamily,
+  %% keywordstyle=\bfseries\color{green!40!black},
+  %% commentstyle=\itshape\color{purple!40!black},
+  %% identifierstyle=\color{blue},
+  %% stringstyle=\color{orange},
+  %% [TODO] Possible convert everything to colorbrewer colors?
+  keywordstyle=\bfseries\color{Greens9p8},
+  commentstyle=\itshape\color{Purples9p7},
+  identifierstyle=\color{Blues9p8},
+  stringstyle=\color{Oranges9p7},
+  %% keywordstyle=\bfseries\color{Greens9p8},
+  %% commentstyle=\itshape\color{Purples9p7},
+  %% identifierstyle=\color{Blues9p6},
+  %% stringstyle=\color{Oranges9p5},
+}
+
+\lstdefinestyle{customasm}{
+   belowcaptionskip=1\baselineskip,
+   %% frame=L,
+   xleftmargin=\parindent,
+   language=[x86masm]Assembler,
+   basicstyle=\footnotesize\ttfamily,
+   keywordstyle=\bfseries\color{Greens9p8},
+   commentstyle=\itshape\color{Purples9p7},
+   identifierstyle=\color{Blues9p8},
+   stringstyle=\color{Oranges9p7},
+   %% commentstyle=\itshape\color{purple!40!black},
+   %% keywordstyle=\color{black},
+   %% identifierstyle=\color{black},
+   tabsize=4,
+   %% numbers=left,
+   %% numbersep=8pt,
+   %% stepnumber=1,
+   %% numberstyle=\tiny\color{gray}
+}
+\lstset{emph={
+    accwrite, accread, retq, rax, rbx, rcx, rdx, rsi, rdi
+  },emphstyle={\bfseries\color{Greens9p7}}
+}
+
+%% \lstset{escapechar=@,style=customc}
+
+\newcommand{\ignore}[1]{}

@@ -1,0 +1,39 @@
+%% -*- mode: latex; mode: auto-revert -*-
+\maketitle
+
+\begin{abstract}
+  Basic document that demonstrates the {\LaTeX} build flow that I use as well as several quirks regarding specific packages.
+\end{abstract}
+
+\section{Example Section}
+Claude Shannon wrote a good masters thesis while at \todo{Figure out where Shannon went to school...}some university~\cite{shannon1938}.
+The thesis was really interesting\schuyler{What did he talk about?}.
+Early work by George Boole laid the foundations of logic~\missingcitation.
+Figure~\ref{fig-shannon} shows the realization of Boole's logical constructs in actual hardware.
+
+\begin{figure}[h]
+  \missingfigure{Add a figure that shows the mapping of logical constructs to circuit elements.
+    Not sure how to do this, though.}
+  \caption{}
+  \label{fig-shannon}
+\end{figure}
+
+\section{Scripts}
+I currently use one main script for keeping {\LaTeX} code in a \emph{nice} state for version control.
+Specifically, I use a script, \texttt{fmtlatex}, to enforce a one-sentence-per-line rule on all files in the source directory that begin with \texttt{sec-}.
+The included Makefile will, by default, run this on all source files that match this criteria.
+I'm not dead-set that this is the right way to go about this, but it's how this is setup.
+The Makefile can be modified, trivially, to use the \texttt{noformat-build} target instead of the \texttt{format-build} target which will not run \texttt{fmtlatex} on input source files.
+
+\section{PGFPlots}
+PGFPlots is an extremely versatile and useful, but has a ridiculously high learning curve.
+It's highly advisable to use the \href{http://mirrors.ctan.org/graphics/pgf/contrib/pgfplots/doc/pgfplots.pdf}{PGFPlots manual} as a reference whenever designing these plots.
+The colors that ship with PGFPlots are atrocious, however, and look terrible on a black and white printer.
+I generally try to use a variety of colors, but to also use a variety of lightnesses to preserver some semblance of the original plots when printed on a terrible black and white printer.
+\href{http://colorbrewer2.org/}{Colorbrewer} provides a good jumping off point for this for single hue colors.
+In this directory, I include a forked submodule, \texttt{palette-art}, which generates a {\TeX} input file that defines all the colorbrewer colors.
+
+\begin{figure}[h]
+  \centering \input{fig-example}
+  \caption{Example PGFPlots figure}
+\end{figure}
