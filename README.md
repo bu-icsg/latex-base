@@ -11,6 +11,7 @@ presentations driven by `latexmk`.
   * `src` -- Top-level repository for all source LaTeX files
     * `bib` -- Directory containing all BibTeX files
     * `figures` -- Directory containing all figures
+    * `templates` -- Directory for LaTeX templates
   * `submodules` -- Other git repositories that are used by this repo
     * `palette-art` -- Submodule that defines Colorbrewer colors for
       use in LaTeX
