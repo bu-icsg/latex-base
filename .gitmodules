@@ -1,0 +1,3 @@
+[submodule "submodules/palette-art"]
+	path = submodules/palette-art
+	url = https://github.com/seldridge/palette-art.git
