@@ -22,7 +22,7 @@ DIR_SCRIPTS = scripts
 SUPPORT_TEX = $(DIR_CB)/latex/colorbrewer.tex
 TARGETS_PDF = $(SOURCES_TEX:%.tex=$(DIR_BUILD)/%.pdf)
 TARGETS_PS  = $(SOURCES_TEX:%.tex=$(DIR_BUILD)/%.ps)
-TARGETS_OPT = $(TARGETS:%.pdf=%-opt.pdf)
+TARGETS_OPT = $(TARGETS_PDF:%.pdf=%-opt.pdf)
 
 SPACE       = $(EMPTY) $(EMPTY)
 
