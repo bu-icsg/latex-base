@@ -11,6 +11,7 @@ SOURCES_TEX = paper.tex presentation.tex
 #--------------------------------------- Configuration that _should_ be static
 DIR_BUILD   = build
 DIR_SRC     = src
+DIR_BAK     = $(DIR_SRC)/bak
 DIR_CB      = submodules/palette-art
 DIR_TEX     = $(DIR_SRC) \
 	$(DIR_SRC)/figures \
@@ -53,11 +54,18 @@ vpath %.tex src
 # Default target. This should either be set to build all targets with
 # LaTeX formatting cleanup (format-build) OR to just build without
 # cleanup (noformat-build)
-all: noformat-build
+all: format-build
 
 # Top-level build target that runs format (cleanup all source files
 # into a "nice" format good for version control) before building
 format-build: format noformat-build
+	@echo "  ########################################"
+	@echo "  # WARNING"
+	@echo "  ########################################"
+	@echo "  # You just ran a \`format-build\` which converts source files"
+	@echo "  # to one-sentence-per-line format. Copies of the _most recent_"
+	@echo "  # originals were save in *.bak"
+	@echo "  ########################################"
 
 # Top-level build target that will build all targets without source
 # file cleanup
@@ -74,9 +82,9 @@ optimized: $(TARGETS_OPT)
 # structure. Backups _of_the_most_recent_version_ONLY_ are made with a
 # .bak suffix.
 format:
-	find src -maxdepth 1 -regex ^.*?sec-.+?\.tex | \
+	find src -maxdepth 1 -regex ^.*?sec-.+?\.tex | sed "s/src\///" |\
 	xargs -I TEX sh -c \
-	'cp TEX TEX.bak && $(DIR_SCRIPTS)/fmtlatex -n 2 TEX.bak > TEX'
+	'cp $(DIR_SRC)/TEX $(DIR_BAK)/TEX.bak && $(DIR_SCRIPTS)/fmtlatex -n 2 $(DIR_BAK)/TEX.bak > $(DIR_SRC)/TEX'
 
 # Postscript target. This is currently NOT WORKING.
 ps: $(TARGETS_PS)
