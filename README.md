@@ -35,15 +35,14 @@ yet to encounter this breaking anything, but it is possible. All files are first
 
 ## Directory Structure
 
-  * `build` -- Main build directory where all output files will be
+* `build` -- Main build directory where all output files will be
     written
-  * `scripts` -- Defines certain helper build scripts, like `fmtlatex`
-  * `src` -- Top-level repository for all source LaTeX files. Section
-  files are expected to look like `sec-XXX.tex`.
+* `scripts` -- Defines certain helper build scripts, like `fmtlatex`
+* `src` -- Top-level repository for all source LaTeX files. Section files are expected to look like `sec-XXX.tex`.
     * `bak` -- Contains the most recent backup of anything fed through `fmtlatex`
     * `bib` -- Directory containing all BibTeX files
     * `figures` -- Directory containing all figures
     * `templates` -- Directory for LaTeX templates
-  * `submodules` -- Other git repositories that are used by this repo
+* `submodules` -- Other git repositories that are used by this repo
     * `palette-art` -- Submodule that defines Colorbrewer colors for
       use in LaTeX
