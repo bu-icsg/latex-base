@@ -3,7 +3,7 @@
 This is a bare-bones environment for building LaTeX documents and
 presentations driven by `latexmk` and loosely based on Chris Batten's
 Automatic LaTeX Build System (but slightly less full featured and not
-as broken).
+using Chris' custom Ruby dependency chaser).
 
 ## Setup and Usage
 
