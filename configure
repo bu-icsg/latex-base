@@ -1,0 +1,7 @@
+#! /bin/sh
+
+# Not a "real" configure script, but this is all you need to get up
+# and running. We need to generate the actual Makefile based on
+# Makefile.in and CONFIG.m4.
+
+m4 CONFIG.m4 Makefile.in > Makefile

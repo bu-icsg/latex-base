@@ -6,7 +6,7 @@
 # Each one of these needs a set of explicit build rules below. I can't
 # use pattern rules because GNU Make doesn't allow for PHONY pattern
 # rules. More detail below.
-SOURCES_TEX = paper.tex presentation.tex
+SOURCES_TEX = PAPER.tex PRESENTATION.tex
 
 #--------------------------------------- Configuration that _should_ be static
 DIR_BUILD   = build
@@ -89,6 +89,11 @@ format:
 # Postscript target. This is currently NOT WORKING.
 ps: $(TARGETS_PS)
 
+# Regenerate the Makefile if anything has changed with the
+# configuration
+Makefile: Makefile.in CONFIG.m4
+	m4 CONFIG.m4 Makefile.in > Makefile
+
 # I use explicit build rules for the paper and presentation because I
 # need these rules to be run everytime, i.e., "PHONY" rules, but GNU
 # Make doesn't allow you to have PHONY pattern rules. These rules must
@@ -99,19 +104,19 @@ ps: $(TARGETS_PS)
 # this better.
 
 # Paper build rules
-$(DIR_BUILD)/paper.pdf:paper.tex $(SUPPORT_TEX) Makefile
+$(DIR_BUILD)/PAPER.pdf:PAPER.tex $(SUPPORT_TEX) Makefile
 	$(ENV) $(LATEXMK_PDF) $<
-$(DIR_BUILD)/paper.ps:paper.tex $(SUPPORT_TEX) Makefile
+$(DIR_BUILD)/PAPER.ps:PAPER.tex $(SUPPORT_TEX) Makefile
 	$(ENV) $(LATEXMK_PS) $<
-$(DIR_BUILD)/paper-opt.pdf:$(DIR_BUILD)/paper.pdf
+$(DIR_BUILD)/paper-opt.pdf:$(DIR_BUILD)/PAPER.pdf
 	$(GS_OPT) -sOutputFile=$@ $<
 
 # Presentation build rules
-$(DIR_BUILD)/presentation.pdf:presentation.tex $(SUPPORT_TEX) Makefile
+$(DIR_BUILD)/PRESENTATION.pdf:PRESENTATION.tex $(SUPPORT_TEX) Makefile
 	$(ENV) $(LATEXMK_PDF) $<
-$(DIR_BUILD)/presentation.ps:presentation.tex $(SUPPORT_TEX) Makefile
+$(DIR_BUILD)/PRESENTATION.ps:PRESENTATION.tex $(SUPPORT_TEX) Makefile
 	$(ENV) $(LATEXMK_PS) $<
-$(DIR_BUILD)/presentation-opt.pdf:$(DIR_BUILD)/presentation.pdf
+$(DIR_BUILD)/PRESENTATION-opt.pdf:$(DIR_BUILD)/PRESENTATION.pdf
 	$(GS_OPT) -sOutputFile=$@ $<
 
 clean:
