@@ -24,24 +24,12 @@
 \usepackage{mathtools}
 \DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
 
-\newcommand{\todobase}[3]{
-  {\color{#1}{\textbf{#2[}}{#3}{\textbf{]}}}\xspace
-}
-\newcommand{\todo}[1]{
-  \todobase{Blues9p5}{TODO}{#1}
-}
-\newcommand{\schuyler}[1]{
-  \todobase{Greens9p5}{SCHUYLER}{#1}
-}
-\newcommand{\fixme}[1]{
-  \todo{#1}
-}
-\newcommand{\missingcitation}{
-  [{\color{cyan}\textbf{??}}]\xspace
-}
-\newcommand{\missingdata}{
-  {\color{Reds9p5}\textbf{XX}}\xspace
-}
+\newcommand{\todobase}[3]{{\color{#1}{\textbf{#2[}}{#3}{\textbf{]}}}\xspace}
+\newcommand{\todo}[1]{\todobase{Blues9p5}{TODO}{#1}}
+\newcommand{\schuyler}[1]{\todobase{Greens9p5}{SCHUYLER}{#1}}
+\newcommand{\fixme}[1]{\todo{#1}}
+\newcommand{\missingcitation}{[{\color{cyan}\textbf{??}}]\xspace}
+\newcommand{\missingdata}{{\color{Reds9p5}\textbf{XX}}\xspace}
 % Creates a dummy figure. Modified from:
 %   https://gist.github.com/dpgettings/9635856
 \newcommand{\missingfigure}[1]{
