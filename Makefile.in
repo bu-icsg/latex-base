@@ -119,6 +119,20 @@ $(DIR_BUILD)/PRESENTATION.ps:PRESENTATION.tex $(SUPPORT_TEX) Makefile
 $(DIR_BUILD)/PRESENTATION-opt.pdf:$(DIR_BUILD)/PRESENTATION.pdf
 	$(GS_OPT) -sOutputFile=$@ $<
 
+# Untested target that embeds fonts. To check for embedded fonts, I
+# can use the following bash one-liner:
+#   if [[ -n `pdffonts 2014_delaware.pdf | tail -n +3 | awk '{print $5}' | grep no` ]]; then echo "Unembedded"; fi
+$(DIR_BUILD)/%-embed.pdf: $(DIR_BUILD)/%.pdf
+	gs \
+		-dBATCH \
+		-dNOPAUSE \
+		-sDEVICE=pdfwrite \
+		-sOutputFile=$@  \
+		-dPDFSETTINGS=/prepress \
+		-dEmbedAllFonts=true \
+		-dSubsetFonts=true \
+		-dCompatibilityLevel=1.6 $<
+
 clean:
 	rm -f $(DIR_BUILD)/* \
 	*.dpth \
