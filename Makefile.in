@@ -6,7 +6,7 @@
 # Each one of these needs a set of explicit build rules below. I can't
 # use pattern rules because GNU Make doesn't allow for PHONY pattern
 # rules. More detail below.
-SOURCES_TEX = PAPER.tex PRESENTATION.tex
+SOURCES_TEX = __PAPER.tex __PRESENTATION.tex
 
 #--------------------------------------- Configuration that _should_ be static
 DIR_BUILD   = build
@@ -49,6 +49,7 @@ ENV         = env TEXINPUTS="$(TEXINPUTS)$(subst $(SPACE),:,$(DIR_TEX)):" \
 vpath %.tex src
 
 .PHONY: all clean format format-build noformat-build ps optimized \
+	refresh-mupdf page-limit\
 	$(TARGETS_PDF) $(TARGETS_PS) $(TARGETS_OPT)
 
 # Default target. This should either be set to build all targets with
@@ -59,17 +60,44 @@ all: format-build
 # Top-level build target that runs format (cleanup all source files
 # into a "nice" format good for version control) before building
 format-build: format noformat-build
-	@echo "  ########################################"
-	@echo "  # WARNING"
-	@echo "  ########################################"
-	@echo "  # You just ran a \`format-build\` which converts source files"
-	@echo "  # to one-sentence-per-line format. Copies of the _most recent_"
-	@echo "  # originals were save in *.bak"
-	@echo "  ########################################"
+	@echo "########################################"
+	@echo "# WARNING"
+	@echo "########################################"
+	@echo "# You just ran a \`format-build\` which converts source files"
+	@echo "# to one-sentence-per-line format. Copies of the _most recent_"
+	@echo "# originals were save in *.bak"
+	@echo "########################################"
 
 # Top-level build target that will build all targets without source
 # file cleanup
-noformat-build: $(TARGETS_PDF)
+noformat-build: $(TARGETS_PDF) refresh-mupdf page-limit signoff
+
+# mupdf will refresh on a SIGHUP, so we send a SIGHUP to all
+# instances of mupdf that we find
+refresh-mupdf:
+	pgrep mupdf | xargs -n 1 -I PID kill -SIGHUP PID 2>&1 > /dev/null
+
+# Check that the paper is inside of the page limit
+page-limit:
+	@echo "########################################"; \
+	pdfinfo $(DIR_BUILD)/__PAPER.pdf | grep Pages | sed 's/Pages:[ ]\+//' | \
+	xargs -I NUMPAGES echo "# Output pdf is NUMPAGES pages"
+
+# Signoff checks. Check that no \todo's remain, that there aren't any
+# question marks (likely an undefined reference), and that all fonts
+# are embedded.
+signoff:
+	@pdftotext $(DIR_BUILD)/__PAPER.pdf - | grep TODO | wc -l | \
+	xargs -I TODOLINES echo "# There are TODOLINES lines with \todo"
+	@pdftotext $(DIR_BUILD)/__PAPER.pdf - | grep ? | wc -l | \
+	xargs -I UNDEF echo "# There are UNDEF lines with \"?\"s"
+	@pdffonts $(DIR_BUILD)/__PAPER.pdf | tail -n+3 | awk '{print $$5}' | \
+	grep "no" | wc -l | xargs -I NUMUNEMBED \
+	echo "# There are NUMUNEMBED unembedded fonts"
+
+# Top-level build target that generates optimized versions of the
+# pdfs using GhostScript.
+optimized: $(TARGETS_OPT)
 
 # Top-level build target that generates optimized versions of the
 # pdfs using GhostScript.
@@ -104,19 +132,19 @@ Makefile: Makefile.in CONFIG.m4
 # this better.
 
 # Paper build rules
-$(DIR_BUILD)/PAPER.pdf:PAPER.tex $(SUPPORT_TEX) Makefile
+$(DIR_BUILD)/__PAPER.pdf:__PAPER.tex $(SUPPORT_TEX) Makefile
 	$(ENV) $(LATEXMK_PDF) $<
-$(DIR_BUILD)/PAPER.ps:PAPER.tex $(SUPPORT_TEX) Makefile
+$(DIR_BUILD)/__PAPER.ps:__PAPER.tex $(SUPPORT_TEX) Makefile
 	$(ENV) $(LATEXMK_PS) $<
-$(DIR_BUILD)/paper-opt.pdf:$(DIR_BUILD)/PAPER.pdf
+$(DIR_BUILD)/paper-opt.pdf:$(DIR_BUILD)/__PAPER.pdf
 	$(GS_OPT) -sOutputFile=$@ $<
 
 # Presentation build rules
-$(DIR_BUILD)/PRESENTATION.pdf:PRESENTATION.tex $(SUPPORT_TEX) Makefile
+$(DIR_BUILD)/__PRESENTATION.pdf:__PRESENTATION.tex $(SUPPORT_TEX) Makefile
 	$(ENV) $(LATEXMK_PDF) $<
-$(DIR_BUILD)/PRESENTATION.ps:PRESENTATION.tex $(SUPPORT_TEX) Makefile
+$(DIR_BUILD)/__PRESENTATION.ps:__PRESENTATION.tex $(SUPPORT_TEX) Makefile
 	$(ENV) $(LATEXMK_PS) $<
-$(DIR_BUILD)/PRESENTATION-opt.pdf:$(DIR_BUILD)/PRESENTATION.pdf
+$(DIR_BUILD)/__PRESENTATION-opt.pdf:$(DIR_BUILD)/__PRESENTATION.pdf
 	$(GS_OPT) -sOutputFile=$@ $<
 
 # Untested target that embeds fonts. To check for embedded fonts, I

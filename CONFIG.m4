@@ -11,6 +11,6 @@
 #   define(PRESENTATION, presentation)
 
 # The name of the top-level LaTeX paper file
-define(PAPER, latex-base)
+define(__PAPER, latex-base)
 # The name of the top-level LaTeX presentation file
-define(PRESENTATION, latex-base-presentation)
+define(__PRESENTATION, latex-base-presentation)
