@@ -11,15 +11,19 @@ SOURCES_TEX = __PAPER.tex __PRESENTATION.tex
 #--------------------------------------- Configuration that _should_ be static
 DIR_BUILD   = build
 DIR_SRC     = src
+DIR_FIG     = $(DIR_SRC)/figures
+DIR_FIG_R   = $(shell find $(DIR_FIG) -type d)
 DIR_BAK     = $(DIR_SRC)/bak
 DIR_CB      = submodules/palette-art
 DIR_TEX     = $(DIR_SRC) \
-	$(DIR_SRC)/figures \
+	$(DIR_FIG_R) \
 	$(DIR_SRC)/templates \
 	$(DIR_CB)/latex
 DIR_BIB     = . ../ ../src/bib build
 DIR_SCRIPTS = scripts
 
+SVG         = $(notdir $(shell find $(DIR_FIGURES) -regex '^.+\.svg'))
+TARGETS_EPS = $(SVG:%.svg=$(DIR_BUILD)/%.eps)
 SUPPORT_TEX = $(DIR_CB)/latex/colorbrewer.tex
 TARGETS_PDF = $(SOURCES_TEX:%.tex=$(DIR_BUILD)/%.pdf)
 TARGETS_PS  = $(SOURCES_TEX:%.tex=$(DIR_BUILD)/%.ps)
@@ -47,6 +51,7 @@ ENV         = env TEXINPUTS="$(TEXINPUTS)$(subst $(SPACE),:,$(DIR_TEX)):" \
 	BIBINPUTS="$(BIBINPUTS)$(subst $(SPACE),:,$(DIR_BIB)):"
 
 vpath %.tex src
+vpath %.svg $(DIR_FIG_R)
 
 .PHONY: all clean format format-build noformat-build ps optimized \
 	refresh-mupdf page-limit\
@@ -70,7 +75,7 @@ format-build: format noformat-build
 
 # Top-level build target that will build all targets without source
 # file cleanup
-noformat-build: $(TARGETS_PDF) refresh-mupdf page-limit signoff
+noformat-build: $(TARGETS_EPS) $(TARGETS_PDF) refresh-mupdf page-limit signoff
 
 # mupdf will refresh on a SIGHUP, so we send a SIGHUP to all
 # instances of mupdf that we find
@@ -122,6 +127,16 @@ ps: $(TARGETS_PS)
 Makefile: Makefile.in CONFIG.m4
 	m4 CONFIG.m4 Makefile.in > Makefile
 
+# The default presentation mode uses `pdfpc` (https://github.com/pdfpc/pdfpc)
+present: all
+	pdfpc $(DIR_BUILD)/__PRESENTATION.pdf
+
+# A fallback presentation mode uses impressive
+# (http://impressive.sourceforge.net), however, this project doesn't
+# appear to be maintained.
+impressive: all
+	impressive -T 0 -g $(shell xrandr_present_resolution) -ff -B 0 -c memory $(DIR_BUILD)/__PRESENTATION.pdf
+
 # I use explicit build rules for the paper and presentation because I
 # need these rules to be run everytime, i.e., "PHONY" rules, but GNU
 # Make doesn't allow you to have PHONY pattern rules. These rules must
@@ -160,6 +175,10 @@ $(DIR_BUILD)/%-embed.pdf: $(DIR_BUILD)/%.pdf
 		-dEmbedAllFonts=true \
 		-dSubsetFonts=true \
 		-dCompatibilityLevel=1.6 $<
+
+# SVG -> EPS build rules
+$(DIR_BUILD)/%.eps: %.svg
+	inkscape $< -D -P $@
 
 clean:
 	rm -f $(DIR_BUILD)/* \
