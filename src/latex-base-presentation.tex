@@ -6,8 +6,9 @@
 
 \input{header-presentation}
 \title[Example Presentation]{Example Beamer Presentation}
-\author[schuyler.eldridge@gmail.com]{Schuyler Eldridge}
-\date[\today]{\today}
+\author[]{Schuyler Eldridge\inst{1} \and Geoff Peterson\inst{2}}
+\institute[Boston University]{\inst{1} Boston University Department of Electrical and Computer Engineering \and \inst{2}The Late Late Show with Craig Ferguson}
+\date[SAC '45]{20\textsuperscript{th} Super Awesome Conference 2045}
 
 \begin{document}
 \maketitle
@@ -49,4 +50,24 @@
     \end{block}
   \end{columns}
 \end{frame}
+
+\begin{frame}{Bibliographies}
+  \begin{block}{So let's say you have to have citations}
+    \begin{itemize}
+    \item Like you want to cite Shannon~\cite{shannon1938}:
+      \begin{itemize}
+      \item Open up the output *.bbl file in the build directory
+      \item Copy this into a ``thebibliography'' environment at the bottom of the slide
+      \item Usually the bibliography font is too big so we drop it to ``tiny''
+      \end{itemize}
+    \item References \emph{should not be placed at the end of a presentation}
+    \end{itemize}
+  \end{block}
+  \begin{thebibliography}{} \tiny
+  \bibitem{shannon1938}
+    C.~E. Shannon, ``A symbolic analysis of relay and switching circuits,''
+    \emph{Electr. Eng.}, vol.~57, no.~12, pp. 713--723, 1938.
+  \end{thebibliography}
+\end{frame}
+
 \end{document}
