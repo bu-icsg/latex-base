@@ -6,7 +6,7 @@
 # Each one of these needs a set of explicit build rules below. I can't
 # use pattern rules because GNU Make doesn't allow for PHONY pattern
 # rules. More detail below.
-SOURCES_TEX = __PAPER.tex __PRESENTATION.tex
+SOURCES_TEX = __PAPER.tex __PRESENTATION.tex __PRESENTATION-handout.tex
 
 #--------------------------------------- Configuration that _should_ be static
 DIR_BUILD   = build
@@ -54,8 +54,8 @@ vpath %.tex src
 vpath %.svg $(DIR_FIG_R)
 
 .PHONY: all clean format format-build noformat-build ps optimized \
-	refresh-mupdf page-limit\
-	$(TARGETS_PDF) $(TARGETS_PS) $(TARGETS_OPT)
+	refresh-mupdf page-limit \
+	go-for-it
 
 # Default target. This should either be set to build all targets with
 # LaTeX formatting cleanup (format-build) OR to just build without
@@ -137,29 +137,14 @@ present: all
 impressive: all
 	impressive -T 0 -g $(shell xrandr_present_resolution) -ff -B 0 -c memory $(DIR_BUILD)/__PRESENTATION.pdf
 
-# I use explicit build rules for the paper and presentation because I
-# need these rules to be run everytime, i.e., "PHONY" rules, but GNU
-# Make doesn't allow you to have PHONY pattern rules. These rules must
-# be run everytime because GNU Make has no concept of the dependencies
-# within the LaTeX files and we need to rely on latexmk to figure all
-# this out. So... this is a bit of an ugly kludge that doesn't scale
-# if you start having tons of targets. [TODO] Figure out a way to do
-# this better.
-
-# Paper build rules
-$(DIR_BUILD)/__PAPER.pdf:__PAPER.tex $(SUPPORT_TEX) Makefile
+# These build rules need to be run every time as the Makefile cannot
+# figure out the dependencies, but latexmk can. These use the Tom
+# Cruise standby, "Go... for it." "You certainly did."
+$(DIR_BUILD)/%.pdf: %.tex $(SUPPORT_TEX) Makefile go-for-it
 	$(ENV) $(LATEXMK_PDF) $<
-$(DIR_BUILD)/__PAPER.ps:__PAPER.tex $(SUPPORT_TEX) Makefile
+$(DIR_BUILD)/%.ps: %.tex $(SUPPORT_TEX) Makefile go-for-it
 	$(ENV) $(LATEXMK_PS) $<
-$(DIR_BUILD)/paper-opt.pdf:$(DIR_BUILD)/__PAPER.pdf
-	$(GS_OPT) -sOutputFile=$@ $<
-
-# Presentation build rules
-$(DIR_BUILD)/__PRESENTATION.pdf:__PRESENTATION.tex $(SUPPORT_TEX) Makefile
-	$(ENV) $(LATEXMK_PDF) $<
-$(DIR_BUILD)/__PRESENTATION.ps:__PRESENTATION.tex $(SUPPORT_TEX) Makefile
-	$(ENV) $(LATEXMK_PS) $<
-$(DIR_BUILD)/__PRESENTATION-opt.pdf:$(DIR_BUILD)/__PRESENTATION.pdf
+$(DIR_BUILD)/%-opt.pdf:$(DIR_BUILD)/%.pdf go-for-it
 	$(GS_OPT) -sOutputFile=$@ $<
 
 # Untested target that embeds fonts. To check for embedded fonts, I

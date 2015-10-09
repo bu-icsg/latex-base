@@ -1,4 +1,8 @@
+\ifdefined\HANDOUT
+\documentclass[handout]{beamer}
+\else
 \documentclass{beamer}
+\fi
 
 \input{header-presentation}
 \title[Example Presentation]{Example Beamer Presentation}
@@ -13,10 +17,10 @@
 \begin{frame}{Blocks Everywhere}
   \begin{block}{Blocks are better?}
     \begin{itemize}
-    \item Everything in beamer seems to look better in blocks
-    \item So, the default slide has a block and an itemized list
+    \item<1-> Everything in beamer seems to look better in blocks
+    \item<2-> So, the default slide has a block and an itemized list
       \begin{itemize}
-      \item You can also nest itemized lists
+      \item<3-> You can also nest itemized lists
       \end{itemize}
     \end{itemize}
   \end{block}
