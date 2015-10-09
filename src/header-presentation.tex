@@ -18,7 +18,18 @@
 %% \setbeamertemplate{caption}[numbered]
 %% \setbeamertemplate{footline}{\hfill\insertframenumber/\inserttotalframenumber}
 %% \input{../src/beamercolorthemeterrier.sty}
-%% \setbeamertemplate{navigation symbols}{}
+
+%% Disable navigation symbols (these just take up space)
+\setbeamertemplate{navigation symbols}{}
+
+%% Bibliography setup. Use a number instead of Beamer's ``cute'' icons...
+\setbeamertemplate{bibliography item}{[\theenumiv]}
+%% Make everything in the bibliography black
+\setbeamercolor{bibliography item}{fg=black}
+\setbeamercolor{bibliography entry author}{fg=black}
+\setbeamercolor{bibliography entry title}{fg=black}
+\setbeamercolor{bibliography entry location}{fg=black}
+\setbeamercolor{bibliography entry note}{fg=black}
 
 \makeatletter
 \setbeamertemplate{footline}
