@@ -11,3 +11,4 @@
 *.dpth
 *.pdf
 Makefile
+src/handout.tex

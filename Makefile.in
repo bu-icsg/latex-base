@@ -6,7 +6,7 @@
 # Each one of these needs a set of explicit build rules below. I can't
 # use pattern rules because GNU Make doesn't allow for PHONY pattern
 # rules. More detail below.
-SOURCES_TEX = __PAPER.tex __PRESENTATION.tex __PRESENTATION-handout.tex
+SOURCES_TEX = __PAPER.tex __PRESENTATION.tex handout.tex
 
 #--------------------------------------- Configuration that _should_ be static
 DIR_BUILD   = build
@@ -161,6 +161,10 @@ $(DIR_BUILD)/%-embed.pdf: $(DIR_BUILD)/%.pdf
 		-dSubsetFonts=true \
 		-dCompatibilityLevel=1.6 $<
 
+# Fill in src/handout.in with the correct presentation name
+$(DIR_SRC)/handout.tex: $(DIR_SRC)/handout.in
+	m4 CONFIG.m4 $< > $@
+
 # SVG -> EPS build rules
 $(DIR_BUILD)/%.eps: %.svg
 	inkscape $< -D -P $@
@@ -174,7 +178,8 @@ clean:
 	*.aux \
 	*.fdb_latexmk \
 	*.dep \
-	*.fls
+	*.fls \
+	$(DIR_SRC)/handout.tex
 
 #--------------------------------------- Colorbrewer Submodule Setup
 # Target to generate colorbrewer.tex in the palette-art submodule

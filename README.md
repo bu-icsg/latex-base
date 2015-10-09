@@ -12,17 +12,18 @@ using Chris' custom Ruby dependency chaser).
 
 ## Setup and Usage
 
-Edit `CONFIG.m4` changing the defines to point to the names of your
-top-level paper and presentation, e.g., `mypaper.tex` and
-`mypresentation.tex` which live in the `src` directory. You can then
-get everything setup with the "not really a `configure` script":
+This repository is intended to build three targets:
+* A LaTeX paper
+* A Beamer presentation with overlays (pseudo-animations/reveals)
+* A Beamer handout (the presentation without overlays)
+
+First, you must edit `CONFIG.m4` to define the name of the top level paper and presentation LaTeX files. Edit `CONFIG.m4` changing the defines to point to the names of your top-level paper and presentation, e.g., `mypaper.tex` and `mypresentation.tex` which live in the `src` directory. You can then get everything setup with the "not really a `configure` script":
 
 ```bash
 ./configure
 ```
 
-This will populate a template Makefile with your defined
-paper/presentation. You can then just use `make`:
+This will populate a template Makefile with your defined paper/presentation. You can then just use `make`:
 
 ```bash
 make
