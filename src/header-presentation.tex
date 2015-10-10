@@ -4,6 +4,7 @@
 
 \usepackage[font={scriptsize}]{caption}
 %% \captionsetup[figure]{labelformat=empty}
+\usepackage[absolute,verbose,overlay]{textpos}
 
 %%-------------------------------------- Beamer Specific
 %% \newenvironment{figure*}
@@ -73,4 +74,13 @@
   \begin{frame}<beamer>{Table of Contents}
     \tableofcontents[currentsection,sectionstyle=show/shaded]
   \end{frame}
+}
+
+%% BU logo placement in the upper right of the frametitle.
+\addtobeamertemplate{frametitle}{}{
+  \setlength{\TPHorizModule}{364pt}
+  \setlength{\TPVertModule}{273pt}
+  \begin{textblock}{1}(0.847,0.005)
+    \includegraphics[width=0.75in]{build/boston_univ_white.eps}
+  \end{textblock}
 }
