@@ -127,8 +127,10 @@ ps: $(TARGETS_PS)
 Makefile: Makefile.in CONFIG.m4
 	m4 CONFIG.m4 Makefile.in > Makefile
 
-# The default presentation mode uses `pdfpc` (https://github.com/pdfpc/pdfpc)
-present: all
+# The default present target uses `pdfpc` (https://github.com/pdfpc/pdfpc)
+present: all pdfpc
+
+pdfpc: $(DIR_BUILD)/__PRESENTATION.pdfpc
 	pdfpc $(DIR_BUILD)/__PRESENTATION.pdf
 
 # A fallback presentation mode uses impressive
@@ -168,6 +170,14 @@ $(DIR_SRC)/handout.tex: $(DIR_SRC)/handout.in
 # SVG -> EPS build rules
 $(DIR_BUILD)/%.eps: %.svg
 	inkscape $< -D -P $@
+
+# Setup a symlink to the pdfpc notes files if not already present.
+# There's no dependency here on having the symlink be valid as we care
+# about the symlink, not the file---pdfpc should then just write this
+# notes file out to the source directory.
+$(DIR_BUILD)/%.pdfpc:
+	touch $(DIR_SRC)/__PRESENTATION.pdfpc
+	(cd $(DIR_BUILD) && ln -sf ../$(DIR_SRC)/__PRESENTATION.pdfpc)
 
 clean:
 	rm -f $(DIR_BUILD)/* \
