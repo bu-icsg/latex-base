@@ -22,7 +22,7 @@ DIR_TEX     = $(DIR_SRC) \
 DIR_BIB     = . ../ ../src/bib build
 DIR_SCRIPTS = scripts
 
-SVG         = $(notdir $(shell find $(DIR_FIGURES) -regex '^.+\.svg'))
+SVG         = $(notdir $(shell find $(DIR_FIG_R) -regex '^.+\.svg'))
 TARGETS_EPS = $(SVG:%.svg=$(DIR_BUILD)/%.eps)
 SUPPORT_TEX = $(DIR_CB)/latex/colorbrewer.tex
 TARGETS_PDF = $(SOURCES_TEX:%.tex=$(DIR_BUILD)/%.pdf)
