@@ -163,7 +163,7 @@ while (<>) {
     # environments, we increment a counter inside a hash. If any of
     # these counters are non-zero, then no special processing is done
     # and lines are just printed as they're written in the source.
-    if (/\\begin{(lstlisting|verbatim)}/) {
+    if (/\\begin\{(lstlisting|verbatim)\}/) {
     # if (/^[^%]\s\\begin{(lstlisting)}/) {
         # Cleanup anything that may have been in the previous buffer
         # that we need to print.
@@ -176,7 +176,7 @@ while (<>) {
         # Print the current line and gtfo.
         print and next;
     }
-    if (/\\end{(lstlisting|verbatim)}/) {
+    if (/\\end\{(lstlisting|verbatim)\}/) {
         # Decrement the flag counters and delete them if they've
         # reached 0.
         $verbatim_flags{$1}--;
