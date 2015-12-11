@@ -22,7 +22,7 @@ DIR_TEX     = $(DIR_SRC) \
 DIR_BIB     = . ../ ../src/bib build
 DIR_SCRIPTS = scripts
 
-SVG         = $(notdir $(shell find $(DIR_FIG_R) -regex '^.+\.svg'))
+SVG         = $(notdir $(shell find $(DIR_FIG_R) | grep '^.+\.svg'))
 TARGETS_EPS = $(SVG:%.svg=$(DIR_BUILD)/%.eps)
 SUPPORT_TEX = $(DIR_CB)/latex/colorbrewer.tex
 TARGETS_PDF = $(SOURCES_TEX:%.tex=$(DIR_BUILD)/%.pdf)
@@ -115,7 +115,7 @@ optimized: $(TARGETS_OPT)
 # structure. Backups _of_the_most_recent_version_ONLY_ are made with a
 # .bak suffix.
 format:
-	find src -maxdepth 1 -regex ^.*?sec-.+?\.tex | sed "s/src\///" |\
+	find src -maxdepth 1 | grep ^.*?sec-.+?\.tex | sed "s/src\///" |\
 	xargs -I TEX sh -c \
 	'cp $(DIR_SRC)/TEX $(DIR_BAK)/TEX.bak && $(DIR_SCRIPTS)/fmtlatex -n 2 $(DIR_BAK)/TEX.bak > $(DIR_SRC)/TEX'
 
