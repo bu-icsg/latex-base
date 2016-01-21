@@ -1,3 +1,4 @@
+%% -*- mode: latex; -*-
 \usepackage{booktabs}
 \usepackage{multirow}
 \usepackage{listings}
@@ -75,23 +76,23 @@
 }
 
 \lstdefinestyle{customasm}{
-   belowcaptionskip=1\baselineskip,
-   %% frame=L,
-   xleftmargin=\parindent,
-   language=[x86masm]Assembler,
-   basicstyle=\footnotesize\ttfamily,
-   keywordstyle=\bfseries\color{Greens9p8},
-   commentstyle=\itshape\color{Purples9p7},
-   identifierstyle=\color{Blues9p8},
-   stringstyle=\color{Oranges9p7},
-   %% commentstyle=\itshape\color{purple!40!black},
-   %% keywordstyle=\color{black},
-   %% identifierstyle=\color{black},
-   tabsize=4,
-   %% numbers=left,
-   %% numbersep=8pt,
-   %% stepnumber=1,
-   %% numberstyle=\tiny\color{gray}
+  belowcaptionskip=1\baselineskip,
+  %% frame=L,
+  xleftmargin=\parindent,
+  language=[x86masm]Assembler,
+  basicstyle=\footnotesize\ttfamily,
+  keywordstyle=\bfseries\color{Greens9p8},
+  commentstyle=\itshape\color{Purples9p7},
+  identifierstyle=\color{Blues9p8},
+  stringstyle=\color{Oranges9p7},
+  %% commentstyle=\itshape\color{purple!40!black},
+  %% keywordstyle=\color{black},
+  %% identifierstyle=\color{black},
+  tabsize=4,
+  %% numbers=left,
+  %% numbersep=8pt,
+  %% stepnumber=1,
+  %% numberstyle=\tiny\color{gray}
 }
 \lstset{emph={
     accwrite, accread, retq, rax, rbx, rcx, rdx, rsi, rdi

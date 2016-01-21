@@ -6,7 +6,7 @@
 # Each one of these needs a set of explicit build rules below. I can't
 # use pattern rules because GNU Make doesn't allow for PHONY pattern
 # rules. More detail below.
-SOURCES_TEX = __PAPER.tex __PRESENTATION.tex handout.tex
+SOURCES_TEX = __PAPER.tex __PRESENTATION.tex __POSTER.tex handout.tex
 
 #--------------------------------------- Configuration that _should_ be static
 DIR_BUILD   = build

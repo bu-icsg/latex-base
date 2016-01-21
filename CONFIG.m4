@@ -14,3 +14,5 @@ dnl The name of the top-level LaTeX paper file
 define(__PAPER, latex-base)
 dnl The name of the top-level LaTeX presentation file
 define(__PRESENTATION, latex-base-presentation)
+dnl The name of the top-level LaTeX poster file
+define(__POSTER, latex-base-poster)
