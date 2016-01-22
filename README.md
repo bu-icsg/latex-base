@@ -16,8 +16,9 @@ This repository is intended to build three targets:
 * A LaTeX paper
 * A Beamer presentation with overlays (pseudo-animations/reveals)
 * A Beamer handout (the presentation without overlays)
+* A Beamer poster
 
-First, you must edit `CONFIG.m4` to define the name of the top level paper and presentation LaTeX files. Edit `CONFIG.m4` changing the defines to point to the names of your top-level paper and presentation, e.g., `mypaper.tex` and `mypresentation.tex` which live in the `src` directory. You can then get everything setup with the "not really a `configure` script":
+First, you must edit `CONFIG.m4` to define the name of the top level paper, presentation, and poster LaTeX files. Edit `CONFIG.m4` changing the defines to point to the names of your top-level source files (e.g., `mypaper`, `mypresentation`). The Makefile expects to see corresponding LaTeX source files in the src directory (e.g., `src/mypaper.tex`). You can then get everything setup with the "not really a `configure` script":
 
 ```bash
 ./configure
