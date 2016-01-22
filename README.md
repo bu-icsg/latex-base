@@ -12,7 +12,7 @@ using Chris' custom Ruby dependency chaser).
 
 ## Setup and Usage
 
-This repository is intended to build three targets:
+This repository is intended to build four targets:
 * A LaTeX paper
 * A Beamer presentation with overlays (pseudo-animations/reveals)
 * A Beamer handout (the presentation without overlays)
