@@ -1,17 +1,30 @@
 # Base LaTeX Build Environment
-
 This is a bare-bones environment for building LaTeX documents and
 presentations driven by `latexmk` and loosely based on Chris Batten's
-Automatic LaTeX Build System (but slightly less full featured and not
-using Chris' custom Ruby dependency chaser).
+Automatic LaTeX Build System (but not using Chris' custom Ruby dependency chaser).
 
 ## Optional Dependencies
-* Inkscape (used to convert .svg to .eps automatically)
-* pdfpc (as the default presentation tool)
-* impressive (as an alternative presentation tool)
+* [Inkscape](https://inkscape.org) -- used to convert .svg to .eps automatically
+* [pdfpc](https://github.com/pdfpc/pdfpc) -- as the default presentation tool
+* [impressive](http://impressive.sourceforge.net/) -- as an alternative presentation tool
+* pdftotext -- to run some checks on the generated PDF, e.g., looking for "TODO"
 
-## Setup and Usage
+## ICSG-specific Setup
+Clone this repository (where $PAPER_NAME is the name of this paper):
+```
+git clone --origin upstream git@github.com:bu-icsg/latex-base $PAPER_NAME
+```
 
+Create a new repository on GitHub for your paper called $PAPER_NAME.
+You can just use this [link](https://github.com/organizations/bu-icsg/repositories/new).
+Add this remote repository, call it "origin", and push your initial changes using the `-u` option to make this the default push/pull target:
+```
+cd $PAPER_NAME
+git remote add origin git@github.com:bu-icsg/$PAPER_NAME
+git push -u origin master
+```
+
+## Overview
 This repository is intended to build four targets:
 * A LaTeX paper
 * A Beamer presentation with overlays (pseudo-animations/reveals)
@@ -30,7 +43,7 @@ This will populate a template Makefile with your defined paper/presentation. You
 make
 ```
 
-Note that by default, I have enabled the `format-build` target. This
+You may optionally use the `format-build` target by manually changing Makefile.in. This
 feeds all input files in the `src` directory that look like
 `^.*?sec-.+?\.tex` (things like `sec-introduction.tex`) through Andrew
 Stacey's `fmtlatex`. This forcibly rewrites all input files into a
