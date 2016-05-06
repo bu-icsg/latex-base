@@ -60,7 +60,7 @@ vpath %.svg $(DIR_FIG_R)
 # Default target. This should either be set to build all targets with
 # LaTeX formatting cleanup (format-build) OR to just build without
 # cleanup (noformat-build)
-all: format-build
+all: noformat-build
 
 # Top-level build target that runs format (cleanup all source files
 # into a "nice" format good for version control) before building
