@@ -11,4 +11,5 @@
 *.dpth
 *.pdf
 Makefile
+!src/Makefile
 src/handout.tex
