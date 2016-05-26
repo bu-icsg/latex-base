@@ -12,7 +12,7 @@ SOURCES_TEX = __PAPER.tex __PRESENTATION.tex __POSTER.tex handout.tex
 DIR_BUILD   = build
 DIR_SRC     = src
 DIR_FIG     = $(DIR_SRC)/figures
-DIR_FIG_R   = $(shell find $(DIR_FIG) -type d)
+DIR_FIG_R   = $(shell find -L $(DIR_FIG) -type d)
 DIR_BAK     = $(DIR_SRC)/bak
 DIR_CB      = submodules/palette-art
 DIR_TEX     = $(DIR_SRC) \
@@ -22,7 +22,7 @@ DIR_TEX     = $(DIR_SRC) \
 DIR_BIB     = . ../ ../src/bib build
 DIR_SCRIPTS = scripts
 
-SVG         = $(notdir $(shell find $(DIR_FIG_R) | grep "\.svg"))
+SVG         = $(notdir $(shell find -L $(DIR_FIG_R) | grep "\.svg"))
 TARGETS_EPS = $(SVG:%.svg=$(DIR_BUILD)/%.eps)
 SUPPORT_TEX = $(DIR_CB)/latex/colorbrewer.tex
 TARGETS_PDF = $(SOURCES_TEX:%.tex=$(DIR_BUILD)/%.pdf)
