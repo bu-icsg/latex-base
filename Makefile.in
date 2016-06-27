@@ -28,6 +28,7 @@ SUPPORT_TEX = $(DIR_CB)/latex/colorbrewer.tex
 TARGETS_PDF = $(SOURCES_TEX:%.tex=$(DIR_BUILD)/%.pdf)
 TARGETS_PS  = $(SOURCES_TEX:%.tex=$(DIR_BUILD)/%.ps)
 TARGETS_OPT = $(TARGETS_PDF:%.pdf=%-opt.pdf)
+TARGETS_TXT = $(TARGEST_PDF:%.pdf=%.txt)
 
 SPACE       = $(EMPTY) $(EMPTY)
 
@@ -53,14 +54,17 @@ ENV         = env TEXINPUTS="$(TEXINPUTS)$(subst $(SPACE),:,$(DIR_TEX)):" \
 vpath %.tex src
 vpath %.svg $(DIR_FIG_R)
 
-.PHONY: all clean format format-build noformat-build ps optimized \
-	refresh-mupdf page-limit \
-	go-for-it
+.PHONY: all abbreviations clean format format-build noformat-build ps \
+	optimized refresh-mupdf page-limit go-for-it
 
 # Default target. This should either be set to build all targets with
 # LaTeX formatting cleanup (format-build) OR to just build without
 # cleanup (noformat-build)
 all: noformat-build
+
+# Dump out a list of all the abbreviations found in the paper
+abbreviations: $(DIR_BUILD)/__PAPER.txt
+	grep -o "[A-Z]\{2\}[A-Z]\+" $< | sort | uniq
 
 # Top-level build target that runs format (cleanup all source files
 # into a "nice" format good for version control) before building
@@ -170,6 +174,10 @@ $(DIR_SRC)/handout.tex: $(DIR_SRC)/handout.in
 # SVG -> EPS build rules
 $(DIR_BUILD)/%.eps: %.svg
 	inkscape $< -D -P $@
+
+# Generate TXT output from PDF for signoff checks and page count determination
+$(DIR_BUILD)/%.txt: $(DIR_BUILD)/%.pdf
+	pdftotext $< $@
 
 # Setup a symlink to the pdfpc notes files if not already present.
 # There's no dependency here on having the symlink be valid as we care
