@@ -75,15 +75,15 @@ format-build: format noformat-build
 
 # Top-level build target that will build all targets without source
 # file cleanup
-noformat-build: $(TARGETS_EPS) $(TARGETS_PDF) refresh-mupdf page-limit signoff
+noformat-build: refresh-mupdf page-limit signoff
 
 # mupdf will refresh on a SIGHUP, so we send a SIGHUP to all
 # instances of mupdf that we find
-refresh-mupdf:
+refresh-mupdf: $(TARGETS_PDF)
 	pgrep mupdf | xargs -n 1 -I PID kill -SIGHUP PID 2>&1 > /dev/null
 
 # Check that the paper is inside of the page limit
-page-limit:
+page-limit: $(TARGETS_PDF)
 	@echo "########################################"; \
 	pdfinfo $(DIR_BUILD)/__PAPER.pdf | grep Pages | sed 's/Pages:[ ]\+//' | \
 	xargs -I NUMPAGES echo "# Output pdf is NUMPAGES pages"
@@ -91,7 +91,7 @@ page-limit:
 # Signoff checks. Check that no \todo's remain, that there aren't any
 # question marks (likely an undefined reference), and that all fonts
 # are embedded.
-signoff:
+signoff: $(TARGETS_PDF)
 	@pdftotext $(DIR_BUILD)/__PAPER.pdf - | grep TODO | wc -l | \
 	xargs -I TODOLINES echo "# There are TODOLINES lines with \todo"
 	@pdftotext $(DIR_BUILD)/__PAPER.pdf - | grep ? | wc -l | \
@@ -142,9 +142,9 @@ impressive: all
 # These build rules need to be run every time as the Makefile cannot
 # figure out the dependencies, but latexmk can. These use the Tom
 # Cruise standby, "Go... for it." "You certainly did."
-$(DIR_BUILD)/%.pdf: %.tex $(SUPPORT_TEX) Makefile go-for-it
+$(DIR_BUILD)/%.pdf: %.tex $(TARGETS_EPS) $(SUPPORT_TEX) Makefile go-for-it
 	$(ENV) $(LATEXMK_PDF) $<
-$(DIR_BUILD)/%.ps: %.tex $(SUPPORT_TEX) Makefile go-for-it
+$(DIR_BUILD)/%.ps: %.tex $(TARGETS_EPS) $(SUPPORT_TEX) Makefile go-for-it
 	$(ENV) $(LATEXMK_PS) $<
 $(DIR_BUILD)/%-opt.pdf:$(DIR_BUILD)/%.pdf go-for-it
 	$(GS_OPT) -sOutputFile=$@ $<
