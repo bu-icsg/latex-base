@@ -23,7 +23,7 @@ pod2usage(-verbose => 2 ) if $man;
 
 my $re_figure_begin = '^\s*\\\begin\{(figure|table)(\*)?\}(\[.*\])?(.+)?$';
 my $re_figure_end = '^\s*\\\end\{(figure|table)(\*)?\}';
-my $re_caption_begin = '^\s*\\\caption\{(.*?)?(\})?$';
+my $re_caption_begin = '^\s*\\\caption(\[.*\])?\{(.*?)?(\})?$';
 my $re_caption_end = '.+\}';
 
 my $header_figure = <<'END';
@@ -69,8 +69,8 @@ while (<>) {
 
     if ($in_figure_or_table > 0) {
         if ($_ =~ /$re_caption_begin/) {
-            print $file_this_figure "%% Caption: $1\n";
-            if (not $2) {
+            print $file_this_figure "%% Caption: $2\n";
+            if (not $3) {
                 $in_caption = 1;
             }
             next;
