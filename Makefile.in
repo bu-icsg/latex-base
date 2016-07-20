@@ -18,7 +18,8 @@ DIR_CB      = submodules/palette-art
 DIR_TEX     = $(DIR_SRC) \
 	$(DIR_FIG_R) \
 	$(DIR_SRC)/templates \
-	$(DIR_CB)/latex
+	$(DIR_CB)/latex \
+	$(DIR_BUILD)/standalone
 DIR_BIB     = . ../ ../src/bib build
 DIR_SCRIPTS = scripts
 
@@ -29,6 +30,8 @@ TARGETS_PDF = $(SOURCES_TEX:%.tex=$(DIR_BUILD)/%.pdf)
 TARGETS_PS  = $(SOURCES_TEX:%.tex=$(DIR_BUILD)/%.ps)
 TARGETS_OPT = $(TARGETS_PDF:%.pdf=%-opt.pdf)
 TARGETS_TXT = $(TARGEST_PDF:%.pdf=%.txt)
+
+ALL_TEX     = $(shell find $(DIR_SRC) -type f -name *.tex)
 
 SPACE       = $(EMPTY) $(EMPTY)
 
@@ -55,7 +58,7 @@ vpath %.tex src
 vpath %.svg $(DIR_FIG_R)
 
 .PHONY: all abbreviations clean format format-build noformat-build ps \
-	optimized refresh-mupdf page-limit go-for-it
+	optimized page-limit refresh-mupdf standalone go-for-it
 
 # Default target. This should either be set to build all targets with
 # LaTeX formatting cleanup (format-build) OR to just build without
@@ -143,6 +146,13 @@ pdfpc: $(DIR_BUILD)/__PRESENTATION.pdfpc
 impressive: all
 	impressive -T 0 -g $(shell xrandr_present_resolution) -ff -B 0 -c memory $(DIR_BUILD)/__PRESENTATION.pdf
 
+# Generate standalone figures and tables
+standalone: $(ALL_TEX) | $(DIR_BUILD)/standalone
+	cat $^ | ./scripts/standalone-figs
+	for file in $(shell ls $(DIR_BUILD)/standalone/fig-standalone-*.tex); do \
+	  $(ENV) $(LATEXMK_PDF) $$file; \
+	done
+
 # These build rules need to be run every time as the Makefile cannot
 # figure out the dependencies, but latexmk can. These use the Tom
 # Cruise standby, "Go... for it." "You certainly did."
@@ -187,8 +197,12 @@ $(DIR_BUILD)/%.pdfpc:
 	touch $(DIR_SRC)/__PRESENTATION.pdfpc
 	(cd $(DIR_BUILD) && ln -sf ../$(DIR_SRC)/__PRESENTATION.pdfpc)
 
+# Build miscellaneous directories
+$(DIR_BUILD)/standalone:
+	mkdir $@
+
 clean:
-	rm -f $(DIR_BUILD)/* \
+	rm -rf $(DIR_BUILD)/* \
 	*.dpth \
 	*.pdf \
 	*.log \
