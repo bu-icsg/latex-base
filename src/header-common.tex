@@ -12,9 +12,10 @@
 
 %% Tikz related
 \usepackage{pgfplots}
-\usepgfplotslibrary{external}
-\usetikzlibrary{external,pgfplots.groupplots}
-\tikzexternalize[prefix=./build]
+%% \usepgfplotslibrary{external}
+%% \usetikzlibrary{external}
+\usetikzlibrary{pgfplots.groupplots}
+%% \tikzexternalize[prefix=./build]
 \ifpdf
 \else
 \tikzset{external/system call={latex \tikzexternalcheckshellescape -halt-on-error -interaction=batchmode -jobname "\image" "\texsource" && dvips -o "\image".ps "\image".dvi}}
@@ -37,18 +38,30 @@
 \newcommand{\missingfigure}[1]{
   \centering
   \fbox{
+    \ifdefined\STANDALONE
+    \begin{minipage}[c][\standaloneColumnWidth][c]{\standaloneColumnWidth}
+      \centering{\todo{#1}}
+    \end{minipage}
+    \else
     \begin{minipage}[c][0.8\columnwidth][c]{0.8\columnwidth}
       \centering{\todo{#1}}
     \end{minipage}
+    \fi
   }
 }
 
 \newcommand{\missingwidefigure}[1]{
   \centering
   \fbox{
+    \ifdefined\STANDALONE
+    \begin{minipage}[c][\standaloneColumnWidth][c]{\standaloneTextWidth}
+      \centering{\todo{#1}}
+    \end{minipage}
+    \else
     \begin{minipage}[c][0.8\columnwidth][c]{0.8\textwidth}
       \centering{\todo{#1}}
     \end{minipage}
+    \fi
   }
 }
 

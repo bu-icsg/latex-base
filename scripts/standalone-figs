@@ -1,0 +1,101 @@
+#!/usr/bin/perl
+
+use strict;
+use Getopt::Long;
+use Pod::Usage;
+
+my $dir = 'build/standalone';
+my $prefix = 'fig-standalone-';
+my (
+    $man,
+    $help
+    );
+
+GetOptions (
+    "d|build-directory=s" => \$dir,
+    "h|?|help" => \$help,
+    "man" => \$man,
+    "p|prefix=s" => \$prefix
+    ) or pod2usage(2);
+
+pod2usage(-exitval => 1, -verbose => 1) if $help;
+pod2usage(-verbose => 2 ) if $man;
+
+my $re_figure_begin = '^\s*\\\begin\{(figure|table)(\*)?\}(\[.*\])?(.+)?$';
+my $re_figure_end = '^\s*\\\end\{(figure|table)(\*)?\}';
+my $re_caption_begin = '^\s*\\\caption(\[.*\])?\{(.*?)?(\})?$';
+my $re_caption_end = '.+\}';
+
+my $header_figure = <<'END';
+%% -*- mode: latex; mode: auto-revert -*-
+\documentclass[crop]{standalone}
+\newcommand{\STANDALONE}{}
+\newcommand{\standaloneColumnWidth}{2.69in} %% 0.8 * 3.37in
+\newcommand{\standaloneTextWidth}{5.2in}    %% 0.8 * 6.50in
+\input{header-common}
+\begin{document}
+END
+
+my $footer_figure = <<'END';
+\end{document}
+END
+
+my $figure_count = 0;
+my $in_figure_or_table = 0;
+my $in_caption = 0;
+my $type;
+my $wide;
+my $file_this_figure;
+while (<>) {
+    if ($_ =~ /$re_figure_begin/) {
+        $in_figure_or_table++;
+        open ($file_this_figure, ">", "$dir/$prefix$figure_count.tex")
+            or die "Unable to open >$dir/$prefix$figure_count.tex";
+        $figure_count++;
+        $type = $1;
+        $wide = $2 ? 1 : 0;
+        print $file_this_figure $header_figure;
+        if ($4) {
+            print $file_this_figure "$4\n";
+        }
+        next;
+    }
+    if ($_ =~ /$re_figure_end/) {
+        $in_figure_or_table--;
+        print $file_this_figure $footer_figure;
+        close $file_this_figure;
+        next;
+    }
+
+    if ($in_figure_or_table > 0) {
+        if ($_ =~ /$re_caption_begin/) {
+            print $file_this_figure "%% Caption: $2\n";
+            if (not $3) {
+                $in_caption = 1;
+            }
+            next;
+        }
+
+        if ($in_caption) {
+            if ($_ =~ /$re_caption_end/) {
+                $in_caption = 0;
+            }
+            print $file_this_figure "%% $_";
+            next;
+        }
+
+        print $file_this_figure $_;
+    }
+}
+
+__END__
+
+=head1 NAME
+
+standalone-figs - process a LaTeX file to generate standalone figures and tables
+
+=head1 SYNOPSIS
+
+standalone-figs [OPTIONS] [FILES]
+
+Rip out all figures and tables in [FILES] or from standard input and generate new LaTeX documents composed of standalone versions of these figures and tables.
