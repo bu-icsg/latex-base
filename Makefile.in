@@ -101,8 +101,8 @@ page-limit: $(TARGETS_PDF)
 signoff: $(TARGETS_PDF)
 	@pdftotext $(DIR_BUILD)/__PAPER.pdf - | grep TODO | wc -l | \
 	xargs -I TODOLINES echo "# There are TODOLINES lines with \todo"
-	@pdftotext $(DIR_BUILD)/__PAPER.pdf - | grep ? | wc -l | \
-	xargs -I UNDEF echo "# There are UNDEF lines with \"?\"s"
+	@pdftotext $(DIR_BUILD)/__PAPER.pdf - | grep ?? | wc -l | \
+	xargs -I UNDEF echo "# There are UNDEF lines with \"??\"s"
 	@pdffonts $(DIR_BUILD)/__PAPER.pdf | tail -n+3 | awk '{print $$5}' | \
 	grep "no" | wc -l | xargs -I NUMUNEMBED \
 	echo "# There are NUMUNEMBED unembedded fonts"
