@@ -9,18 +9,19 @@
 SOURCES_TEX = __PAPER.tex __PRESENTATION.tex __POSTER.tex handout.tex
 
 #--------------------------------------- Configuration that _should_ be static
-DIR_BUILD   = build
-DIR_SRC     = src
+DIR_TOP     = $(abspath .)
+DIR_BUILD   = $(DIR_TOP)/build
+DIR_SRC     = $(DIR_TOP)/src
 DIR_FIG     = $(DIR_SRC)/figures
 DIR_FIG_R   = $(shell find -L $(DIR_FIG) -type d)
 DIR_BAK     = $(DIR_SRC)/bak
-DIR_CB      = submodules/palette-art
+DIR_CB      = $(DIR_TOP)/submodules/palette-art
 DIR_TEX     = $(DIR_SRC) \
 	$(DIR_FIG_R) \
 	$(DIR_SRC)/templates \
 	$(DIR_CB)/latex \
 	$(DIR_BUILD)/standalone
-DIR_BIB     = . ../ ../src/bib build
+DIR_BIB     = $(DIR_TOP) $(DIR_TOP)/../ $(DIR_TOP)../src/bib build
 DIR_SCRIPTS = scripts
 
 SVG         = $(notdir $(shell find -L $(DIR_FIG_R) | grep "\.svg"))
@@ -54,7 +55,7 @@ GS_OPT      = gs \
 ENV         = env TEXINPUTS="$(TEXINPUTS)$(subst $(SPACE),:,$(DIR_TEX)):" \
 	BIBINPUTS="$(BIBINPUTS)$(subst $(SPACE),:,$(DIR_BIB)):"
 
-vpath %.tex src
+vpath %.tex $(DIR_TOP)/src
 vpath %.svg $(DIR_FIG_R)
 
 .PHONY: all abbreviations clean format format-build noformat-build ps \
@@ -131,8 +132,8 @@ ps: $(TARGETS_PS)
 
 # Regenerate the Makefile if anything has changed with the
 # configuration
-Makefile: Makefile.in CONFIG.m4
-	m4 CONFIG.m4 Makefile.in > Makefile
+$(DIR_TOP)/Makefile: $(DIR_TOP)/Makefile.in $(DIR_TOP)/CONFIG.m4
+	m4 $(DIR_TOP)/CONFIG.m4 $(DIR_TOP)/Makefile.in > $(DIR_TOP)/Makefile
 
 # The default present target uses `pdfpc` (https://github.com/pdfpc/pdfpc)
 present: all pdfpc
@@ -148,7 +149,7 @@ impressive: all
 
 # Generate standalone figures and tables
 standalone: $(ALL_TEX) | $(DIR_BUILD)/standalone
-	cat $^ | ./scripts/standalone-figs
+	cat $^ | $(DIR_TOP)/scripts/standalone-figs
 	for file in $(shell ls $(DIR_BUILD)/standalone/fig-standalone-*.tex); do \
 	  $(ENV) $(LATEXMK_PDF) $$file; \
 	done
@@ -156,9 +157,9 @@ standalone: $(ALL_TEX) | $(DIR_BUILD)/standalone
 # These build rules need to be run every time as the Makefile cannot
 # figure out the dependencies, but latexmk can. These use the Tom
 # Cruise standby, "Go... for it." "You certainly did."
-$(DIR_BUILD)/%.pdf: %.tex $(TARGETS_EPS) $(SUPPORT_TEX) Makefile go-for-it
+$(DIR_BUILD)/%.pdf: %.tex $(TARGETS_EPS) $(SUPPORT_TEX) $(DIR_TOP)/Makefile go-for-it
 	$(ENV) $(LATEXMK_PDF) $<
-$(DIR_BUILD)/%.ps: %.tex $(TARGETS_EPS) $(SUPPORT_TEX) Makefile go-for-it
+$(DIR_BUILD)/%.ps: %.tex $(TARGETS_EPS) $(SUPPORT_TEX) $(DIR_TOP)/Makefile go-for-it
 	$(ENV) $(LATEXMK_PS) $<
 $(DIR_BUILD)/%-opt.pdf:$(DIR_BUILD)/%.pdf go-for-it
 	$(GS_OPT) -sOutputFile=$@ $<
@@ -168,14 +169,14 @@ $(DIR_BUILD)/%-opt.pdf:$(DIR_BUILD)/%.pdf go-for-it
 #   if [[ -n `pdffonts 2014_delaware.pdf | tail -n +3 | awk '{print $5}' | grep no` ]]; then echo "Unembedded"; fi
 $(DIR_BUILD)/%-embed.pdf: $(DIR_BUILD)/%.pdf
 	gs \
-		-dBATCH \
-		-dNOPAUSE \
-		-sDEVICE=pdfwrite \
-		-sOutputFile=$@  \
-		-dPDFSETTINGS=/prepress \
-		-dEmbedAllFonts=true \
-		-dSubsetFonts=true \
-		-dCompatibilityLevel=1.6 $<
+	-dBATCH \
+	-dNOPAUSE \
+	-sDEVICE=pdfwrite \
+	-sOutputFile=$@  \
+	-dPDFSETTINGS=/prepress \
+	-dEmbedAllFonts=true \
+	-dSubsetFonts=true \
+	-dCompatibilityLevel=1.6 $<
 
 # Fill in src/handout.in with the correct presentation name
 $(DIR_SRC)/handout.tex: $(DIR_SRC)/handout.in
