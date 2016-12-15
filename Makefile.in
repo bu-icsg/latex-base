@@ -21,8 +21,8 @@ DIR_TEX     = $(DIR_SRC) \
 	$(DIR_SRC)/templates \
 	$(DIR_CB)/latex \
 	$(DIR_BUILD)/standalone
-DIR_BIB     = $(DIR_TOP) $(DIR_TOP)/../ $(DIR_TOP)../src/bib build
-DIR_SCRIPTS = scripts
+DIR_BIB     = $(DIR_BUILD) $(DIR_TOP) $(DIR_TOP)/src/bib
+DIR_SCRIPTS = $(DIR_TOP)/scripts
 
 SVG         = $(notdir $(shell find -L $(DIR_FIG_R) | grep "\.svg"))
 TARGETS_EPS = $(SVG:%.svg=$(DIR_BUILD)/%.eps)
@@ -149,7 +149,7 @@ impressive: all
 
 # Generate standalone figures and tables
 standalone: $(ALL_TEX) | $(DIR_BUILD)/standalone
-	cat $^ | $(DIR_TOP)/scripts/standalone-figs
+	cat $^ | $(DIR_SCRIPTS)/standalone-figs
 	for file in $(shell ls $(DIR_BUILD)/standalone/fig-standalone-*.tex); do \
 	  $(ENV) $(LATEXMK_PDF) $$file; \
 	done
