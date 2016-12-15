@@ -21,7 +21,7 @@ DIR_TEX     = $(DIR_SRC) \
 	$(DIR_SRC)/templates \
 	$(DIR_CB)/latex \
 	$(DIR_BUILD)/standalone
-DIR_BIB     = $(DIR_BUILD) $(DIR_TOP) $(DIR_TOP)/src/bib
+DIR_BIB     = $(DIR_BUILD) $(DIR_TOP) $(DIR_TOP)/src/bib $(DIR_TOP)/src/templates
 DIR_SCRIPTS = $(DIR_TOP)/scripts
 
 SVG         = $(notdir $(shell find -L $(DIR_FIG_R) | grep "\.svg"))
